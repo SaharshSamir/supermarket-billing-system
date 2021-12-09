@@ -1,0 +1,12 @@
+{
+  "categories": [],
+  "items": [
+    {
+      "name": "apple",
+      "price": 12.0,
+      "category": "PRODUCE",
+      "itemId": 1
+    }
+  ],
+  "restockDate": "Dec 2, 2021, 2:06:40 PM"
+}
