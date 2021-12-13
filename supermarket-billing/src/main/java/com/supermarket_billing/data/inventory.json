@@ -1,12 +1,17 @@
 {
-  "categories": [],
   "items": [
     {
       "name": "apple",
-      "price": 12.0,
+      "price": 10.0,
       "category": "PRODUCE",
       "itemId": 1
+    },
+    {
+      "name": "detergent",
+      "price": 40.0,
+      "category": "CLEANERS",
+      "itemId": 2
     }
   ],
-  "restockDate": "Dec 2, 2021, 2:06:40 PM"
+  "restockDate": "Dec 13, 2021, 4:49:44 PM"
 }

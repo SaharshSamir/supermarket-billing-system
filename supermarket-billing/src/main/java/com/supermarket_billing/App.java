@@ -19,6 +19,7 @@ public final class App {
     static Scanner sc = new Scanner(System.in);
     static Inventory inventory = new Inventory();
     static JavaUtils utils = new JavaUtils();
+    static Item item = new Item();
 
     public static void firstMenu() {
         System.out.println("1. Item functions");
@@ -30,7 +31,9 @@ public final class App {
     public static void handleInventoryFunctions() {
         ArrayList<Item> items = new ArrayList<Item>();
         Iterator<Item> itemIt = items.iterator();
+        ArrayList<String> categories = item.getCategories();
 
+        Iterator<String> categoriesIterator = categories.iterator();
         // ArrayList<Categories> categories = new ArrayList<Categories>();
         // Iterator<Categories> categoriesIt = categories.iterator();
 
@@ -48,7 +51,7 @@ public final class App {
         System.out.println("8. Show restock date");
         System.out.println("9. Edit restock date");
         // Get input
-        System.out.println("\n Pick an option[1-9]: ");
+        System.out.println("\n Pick an option[1-9]: \n");
         int key = sc.nextInt();
 
         // handle input
@@ -58,7 +61,8 @@ public final class App {
                 items = inventory.getItems();
                 itemIt = items.iterator();
                 while (itemIt.hasNext()) {
-                    System.out.println(itemIt.next().getName());
+                    Item thisItem = itemIt.next();
+                    System.out.println("\n" + thisItem.getItemId() + ". " + thisItem.getName());
                     System.out.println("\n");
                 }
                 break;
@@ -73,10 +77,16 @@ public final class App {
                     Item currentItem = itemIt.next();
 
                     if (currentItem.getItemId() == item_id) {
-                        System.out.println("");
+                        System.out.println("\n");
+                        System.out.println("Item id: " + currentItem.getItemId() + "\n");
+                        System.out.println("Name: " + currentItem.getName() + "\n");
+                        System.out.println("Price: " + currentItem.getPrice() + "\n");
+                        System.out.println("Category: " + currentItem.getCategory() + "\n");
+                        System.out.println("\n");
                     }
                 }
-                // add an item
+                break;
+            // add an item
             case 3:
                 // get Item name
                 System.out.println("Enter item name: ");
@@ -88,79 +98,95 @@ public final class App {
 
                 // get Item category
                 System.out.println("Pick a category for the item: ");
-                // Categories catArr[] = Categories.values();
-                // int count = 1;
+                int count = 1;
                 // for (Categories cat : catArr) {
                 // System.out.println(count++ + "." + cat + "\n");
                 // }
+                while (categoriesIterator.hasNext()) {
+                    String cat = categoriesIterator.next();
+                    System.out.println(count++ + "." + cat + "\n");
+                }
                 int catAns = sc.nextInt();
-                // Categories newItemCategory = Categories.values()[catAns - 1];
+                String newItemCategory = categories.get(catAns - 1);
                 // String[] categoryNames = utils.getNames(Categories.class);
 
                 // building item object
                 int itemId = inventory.getItems().size();
-                // Item newItem = new Item(newItemName, newItemCategory, newItemPrice, itemId +
-                // 1);
-                // inventory.addItem(newItem);
-                // System.out.println("New item was added: ");
-                // System.out.println(newItem);
+                Item newItem = new Item(newItemName, newItemCategory, newItemPrice, itemId + 1);
+                inventory.addItem(newItem);
+                System.out.println("New item was added: ");
+                System.out.println(newItem);
                 break;
 
             // edit an item
-            case 4:
+            case 4: {
+
                 items = inventory.getItems();
 
                 while (itemIt.hasNext()) {
                     System.out.println(itemIt.next().getName());
                     System.out.println("\n");
                 }
-                System.out.println("Enter the name of the item you want to edit: ");
-                String itemNameToEdit = sc.next();
+                System.out.println("Enter the id of the item you want to edit: ");
+                int itemIdToEdit = sc.nextInt();
                 itemIt = items.iterator();
                 Item itemToEdit = new Item();
                 while (itemIt.hasNext()) {
-                    if (itemIt.next().getName() == itemNameToEdit) {
-                        itemToEdit = itemIt.next();
+                    Item thisItem = itemIt.next();
+                    if (thisItem.getItemId() == itemIdToEdit) {
+                        itemToEdit = thisItem;
+                        System.out.println(itemToEdit);
                     }
                 }
-                System.out.println(itemToEdit);
                 System.out.println("What field do you want to edit?[1-3] \n");
-                System.out.println("1.Name \n 2.price \n 3.category");
+                System.out.println("1.Name \n2.price \n3.category");
                 int opt = sc.nextInt();
                 switch (opt) {
-                    case 1:
+                    // edit Item Name
+                    case 1: {
                         System.out.println("Enter the new name: ");
                         String newName = sc.next();
                         itemToEdit.setName(newName);
                         inventory.updateData();
                         break;
-                    case 2:
+                    }
+                    // edit Item Price
+                    case 2: {
                         System.out.println("Enter the new price: ");
                         float newPrice = sc.nextFloat();
                         itemToEdit.setPrice(newPrice);
                         inventory.updateData();
                         break;
-                    case 3:
-                        // System.out.println("Pick a category for the item: ");
+                    }
+                    // edit Item Category
+                    case 3: {
+                        System.out.println("Pick a category for the item: ");
                         // catArr = Categories.values();
-                        // count = 1;
-                        // for (Categories cat : catArr) {
-                        // System.out.println(count++ + "." + cat + "\n");
-                        // }
-                        // catAns = sc.nextInt();
-                        // Categories newCategory = Categories.values()[catAns - 1];
-                        // itemToEdit.setCategory(newCategory);
-                        // inventory.updateData();
+                        count = 1;
+                        while (categoriesIterator.hasNext()) {
+                            String cat = categoriesIterator.next();
+                            System.out.println(count++ + "." + cat + "\n");
+                        }
+
+                        catAns = sc.nextInt();
+                        String newCategory = categories.get(catAns - 1);
+                        itemToEdit.setCategory(newCategory);
+                        inventory.updateData();
                         break;
+                    }
                     default:
                         break;
                 }
-
                 break;
+            }
 
             // delete an item
-            case 5:
+            case 5: {
+                System.out.println("Enter the id of the item you want to delete: ");
+                int itemToDeleteId = sc.nextInt();
+                inventory.deleteItem(itemToDeleteId);
                 break;
+            }
 
             // show all categories
             case 6:
@@ -209,16 +235,6 @@ public final class App {
             res = sc.next().charAt(0);
         } while (res == 'y');
 
-        // Item apple = new Item("Apple", Categories.PRODUCE, 20);
-        // Item banana = new Item("banana", Categories.PRODUCE, 10);
-        // Inventory currentInventory = newInventory.getInventory();
-        // System.out.println("Before adding a new item : \n");
-        // ArrayList<Item> items = currentInventory.getItems();
-        // newInventory.addItem(apple);
-        // newInventory.addItem(banana);
-        // currentInventory = newInventory.getInventory();
-        // System.out.println("After adding a new item : \n");
-        // ArrayList<Item> newItems = newInventory.getItems();
         sc.close();
     }
 }

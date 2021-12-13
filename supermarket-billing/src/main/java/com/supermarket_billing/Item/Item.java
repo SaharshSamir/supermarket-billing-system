@@ -7,9 +7,10 @@ public class Item {
     // PRIVATE
     private String name;
     private float price;
-    // private Categories category;
+    private String category;
     private int itemId;
-    private ArrayList<String> categories = new ArrayList<String>(Arrays.asList("PRODUCE",
+    private static ArrayList<String> categories = new ArrayList<String>(Arrays.asList(
+            "PRODUCE",
             "BEVERAGES",
             "BAKERY",
             "CANNED GOODS",
@@ -40,13 +41,17 @@ public class Item {
         return this.name;
     }
 
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
     public int getItemId() {
         return this.itemId;
     }
 
-    // public Categories getCategory() {
-    // return this;
-    // }
+    public String getCategory() {
+        return this.category;
+    }
 
     public float getPrice() {
         return this.price;
@@ -61,9 +66,9 @@ public class Item {
         this.itemId = itemId;
     }
 
-    // public void setCategory(Categories category) {
-    // this.category = category;
-    // }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public void setPrice(float price) {
         this.price = price;
@@ -71,22 +76,22 @@ public class Item {
 
     public Item() {
         this.name = "";
-        // this.category = Categories.OTHER;
+        this.category = "OTHER";
         this.price = 0;
         this.itemId = 0;
     }
 
-    // public Item(String name, Categories category, float price, int itemId) {
-    // this.name = name;
-    // this.category = category;
-    // this.price = price;
-    // this.itemId = itemId;
-    // }
+    public Item(String name, String category, float price, int itemId) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.itemId = itemId;
+    }
 
-    // @Override
-    // public String toString() {
-    // String output = "Name: " + this.name + "\n" + "Price: " + this.price + "\n "
-    // + "Category: " + this.category;
-    // return output;
-    // }
+    @Override
+    public String toString() {
+        String output = "Name: " + this.name + "\n" + "Price: " + this.price + "\n "
+                + "Category: " + this.category;
+        return output;
+    }
 }

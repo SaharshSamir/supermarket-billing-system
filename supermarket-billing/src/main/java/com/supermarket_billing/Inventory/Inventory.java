@@ -22,7 +22,7 @@ public class Inventory {
     private ArrayList<Item> items = new ArrayList<Item>();
     // private ArrayList<Categories> categories = new ArrayList<Categories>();
     private Date restockDate = new Date();
-    private static String dataLocation = "D:\\codes\\supermarket-billing-java\\supermarket_billing\\supermarket-billing\\src\\main\\java\\com\\supermarket_billing\\data\\inventory.json";
+    private static String dataLocation = "supermarket-billing/src/main/java/com/supermarket_billing/data/inventory.json";
 
     // UTILS
     private void generateInventoryDatabase() {
@@ -61,6 +61,25 @@ public class Inventory {
     public void addItem(Item newItem) {
         this.items.add(newItem);
         updateData();
+    }
+
+    public void deleteItem(int itemId) {
+        // delete item
+        ArrayList<Item> items = this.getItems();
+        items.remove(itemId - 1);
+
+        // re-index the item IDs
+        int len = items.size();
+        for (int i = len; i != 0; i--) {
+            int currentIndex = i - 1;
+
+            // get current item and change it's id
+            Item currentItem = items.get(currentIndex);
+            currentItem.setItemId(i);
+            items.set(currentIndex, currentItem);
+        }
+
+        this.updateData();
     }
 
     public Inventory getInventory() throws IOException {
