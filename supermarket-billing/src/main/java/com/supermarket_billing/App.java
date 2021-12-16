@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Iterator;
+import java.util.ListIterator;
 
 import com.supermarket_billing.Inventory.Inventory;
 import com.supermarket_billing.Item.Item;
@@ -31,7 +32,7 @@ public final class App {
     public static void handleInventoryFunctions() {
         ArrayList<Item> items = new ArrayList<Item>();
         Iterator<Item> itemIt = items.iterator();
-        ArrayList<String> categories = item.getCategories();
+        ArrayList<String> categories = inventory.getCategories();
 
         Iterator<String> categoriesIterator = categories.iterator();
         // ArrayList<Categories> categories = new ArrayList<Categories>();
@@ -46,12 +47,11 @@ public final class App {
         System.out.println("5. Delete an item");
         System.out.println("---CATEGOIRES---");
         System.out.println("6. Show all categories");
-        System.out.println("7. Delete a category");
         System.out.println("---RESTOCK DATE---");
-        System.out.println("8. Show restock date");
-        System.out.println("9. Edit restock date");
+        System.out.println("7. Show restock date");
+        System.out.println("8. Edit restock date");
         // Get input
-        System.out.println("\n Pick an option[1-9]: \n");
+        System.out.println("\n Pick an option[1-8]: \n");
         int key = sc.nextInt();
 
         // handle input
@@ -189,24 +189,55 @@ public final class App {
             }
 
             // show all categories
-            case 6:
+            case 6: {
+                ListIterator<String> categoriesIt = categories.listIterator();
+                while (categoriesIt.hasNext()) {
+                    int idx = categoriesIt.nextIndex();
+                    String currentCategory = categoriesIt.next();
+                    System.out.println(idx + 1 + " " + currentCategory);
+                }
                 break;
+            }
 
             // delete a category
-            case 7:
-                break;
+            // case 7:{
+            // System.out.println("Enter the id of the category you want to delete: ");
+            // int catId = sc.nextInt();
+            // ListIterator<String> categoriesIt = categories.listIterator();
+            // while(categoriesIt.hasNext()){
+            // int idToCheck = catId-1;
+            // int currentCatId = categoriesIt.nextIndex();
+            // if(idToCheck == currentCatId){
+            // String deletedCatcategories.remove(currentCatId);
+            // }
+            // }
+            // break;
+            // }
 
             // show restock date
-            case 8:
+            case 7: {
+                // System.out.println("current restock date: " + inventory.);
+                String restockDate = inventory.getRestockDate();
+                System.out.println("Restock date: " + restockDate);
                 break;
+            }
 
             // edit restock date
-            case 9:
+            case 8: {
+                System.out.println("Enter the new restock date ['dd/MM/yyyy']: ");
+                String newRestockDate = sc.next();
+                inventory.setRestockDate(newRestockDate);
+                System.out.println("Inventory restock date updated.");
                 break;
+            }
 
             default:
                 break;
         }
+
+    }
+
+    public static void handleCustomerFunctions() {
 
     }
 
@@ -224,9 +255,13 @@ public final class App {
             int key;
             key = sc.nextInt();
             switch (key) {
-                case 1:
+                case 1: {
                     handleInventoryFunctions();
                     break;
+                }
+                case 2: {
+                    handleCustomerFunctions();
+                }
 
                 default:
                     break;

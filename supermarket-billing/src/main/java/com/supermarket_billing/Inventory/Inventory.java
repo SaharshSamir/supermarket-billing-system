@@ -2,11 +2,16 @@ package com.supermarket_billing.Inventory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.io.FileReader;
+
+// import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
+// import java.io.Reader;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +27,18 @@ public class Inventory {
     private ArrayList<Item> items = new ArrayList<Item>();
     // private ArrayList<Categories> categories = new ArrayList<Categories>();
     private Date restockDate = new Date();
+    private static ArrayList<String> categories = new ArrayList<String>(Arrays.asList(
+            "PRODUCE",
+            "BEVERAGES",
+            "BAKERY",
+            "CANNED GOODS",
+            "DRY_GOODS",
+            "FROZEN FOOD",
+            "MEAT",
+            "CLEANERS",
+            "PERSONAL CARE",
+            "PAPER GOODS",
+            "OTHER"));
     private static String dataLocation = "supermarket-billing/src/main/java/com/supermarket_billing/data/inventory.json";
 
     // UTILS
@@ -82,17 +99,38 @@ public class Inventory {
         this.updateData();
     }
 
-    public Inventory getInventory() throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Inventory currentInventory;
-        Reader reader = new FileReader(dataLocation);
-        currentInventory = gson.fromJson(reader, Inventory.class);
-        return currentInventory;
+    // private Inventory getInventory() throws IOException {
+    // Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    // Inventory currentInventory;
+    // Reader reader = new FileReader(dataLocation);
+    // currentInventory = gson.fromJson(reader, Inventory.class);
+    // return currentInventory;
+    // }
+
+    public void setRestockDate(String newRestockDate) {
+        try {
+            Date newDate = new SimpleDateFormat("dd/MM/yyyy").parse(newRestockDate);
+            this.restockDate = newDate;
+            this.updateData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // GETTERS
     public ArrayList<Item> getItems() {
         return this.items;
+    }
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
+    public String getRestockDate() {
+        Date restockDate = this.restockDate;
+        DateFormat dateFormatter = new SimpleDateFormat("dd / MM / yyyy");
+        String formatterRestockDate = dateFormatter.format(restockDate);
+        return formatterRestockDate;
     }
 
     public Inventory() {

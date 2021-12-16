@@ -1,26 +1,12 @@
 package com.supermarket_billing.Item;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Item {
     // PRIVATE
     private String name;
     private float price;
     private String category;
     private int itemId;
-    private static ArrayList<String> categories = new ArrayList<String>(Arrays.asList(
-            "PRODUCE",
-            "BEVERAGES",
-            "BAKERY",
-            "CANNED GOODS",
-            "DRY_GOODS",
-            "FROZEN FOOD",
-            "MEAT",
-            "CLEANERS",
-            "PERSONAL CARE",
-            "PAPER GOODS",
-            "OTHER"));
+
     // PUBLIC
     // public enum Categories {
     // PRODUCE,
@@ -39,10 +25,6 @@ public class Item {
     // getters
     public String getName() {
         return this.name;
-    }
-
-    public ArrayList<String> getCategories() {
-        return categories;
     }
 
     public int getItemId() {
