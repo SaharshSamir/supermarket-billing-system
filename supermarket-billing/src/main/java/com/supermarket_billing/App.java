@@ -8,6 +8,8 @@ import java.util.ListIterator;
 
 import com.supermarket_billing.Inventory.Inventory;
 import com.supermarket_billing.Item.Item;
+import com.supermarket_billing.customer.Customer;
+import com.supermarket_billing.customer.Customers;
 // import com.supermarket_billing.Item.Item.Categories;
 
 import com.supermarket_billing.utils.JavaUtils;
@@ -21,6 +23,7 @@ public final class App {
     static Inventory inventory = new Inventory();
     static JavaUtils utils = new JavaUtils();
     static Item item = new Item();
+    static Customers customers = new Customers();
 
     public static void firstMenu() {
         System.out.println("1. Item functions");
@@ -175,6 +178,7 @@ public final class App {
                         break;
                     }
                     default:
+                        System.out.println("invalid input.");
                         break;
                 }
                 break;
@@ -232,12 +236,111 @@ public final class App {
             }
 
             default:
+                System.out.println("invalid input.");
                 break;
         }
 
     }
 
     public static void handleCustomerFunctions() {
+        ArrayList<String> categories = inventory.getCategories();
+        Iterator<String> categoriesIterator = categories.iterator();
+        ArrayList<Item> items = inventory.getItems();
+        Iterator<Item> itemIt = items.iterator();
+        // display customer menu
+        System.out.println("\nSelect an option: ");
+        System.out.println("1.Show all registered customers");
+        System.out.println("2.Show a registered customer");
+        System.out.println("3.Add a registered customer");
+        System.out.println("4.Add to Monthly Tab");
+        System.out.println("5.Delete a registed customer");
+        System.out.println("Enter your choice[1-5]: ");
+        int ans = sc.nextInt();
+
+        switch (ans) {
+            // Show all registered customers
+            case 1: {
+                ArrayList<Customer> allCustomers = customers.getAllCustomers();
+                Iterator<Customer> customerIt = allCustomers.iterator();
+                while (customerIt.hasNext()) {
+                    Customer currentCustomer = customerIt.next();
+                    System.out.println(currentCustomer.getName());
+                }
+                break;
+            }
+            // Show a registered customer
+            case 2: {
+                ArrayList<Customer> allCustomers = customers.getAllCustomers();
+                Iterator<Customer> customersIt = allCustomers.iterator();
+                System.out.println("Enter the id of the customer that you wish to see: ");
+                int cust_id = sc.nextInt();
+                while (customersIt.hasNext()) {
+                    Customer currentCustomer = customersIt.next();
+                    if (currentCustomer.getCustomerId() == cust_id) {
+                        System.out.println(currentCustomer);
+                        break;
+                    }
+                }
+                break;
+            }
+            // Add a customer
+            case 3: {
+                // Get new customer details
+                System.out.println("Enter customer name: ");
+                String name = sc.next();
+                System.out.println("Enter customer phone no: ");
+                long phoneNo = sc.nextLong();
+                ArrayList<Customer> allCustomers = customers.getAllCustomers();
+                int cust_id = allCustomers.size() + 1;
+                ArrayList<Item> monthlyTab = new ArrayList<Item>();
+                Customer newCustomer = new Customer(cust_id, name, phoneNo, 0, monthlyTab);
+                customers.addCustomer(newCustomer);
+                System.out.println("New customer added: \n" + newCustomer);
+                break;
+            }
+            // Add item to monthly tab
+            case 4: {
+                ArrayList<Customer> allCustomers = customers.getAllCustomers();
+                Iterator<Customer> customersIt = allCustomers.iterator();
+                System.out.println("Enter the id of the customer: ");
+                int cust_id = sc.nextInt();
+                // Customer thisCustomer = null;
+                // while (customersIt.hasNext()) {
+                // Customer currentCustomer = customersIt.next();
+                // if (currentCustomer.getCustomerId() == cust_id) {
+                // thisCustomer = currentCustomer;
+                // break;
+                // }
+                // }
+                // if (thisCustomer == null) {
+                // break;
+                // }
+                // items = inventory.getItems();
+                // itemIt = items.iterator();
+                while (itemIt.hasNext()) {
+                    Item thisItem = itemIt.next();
+                    System.out.println("\n" + thisItem.getItemId() + ". " + thisItem.getName());
+                    System.out.println("\n");
+                }
+                System.out.println("Enter item id: ");
+                int item_id = sc.nextInt();
+                itemIt = items.iterator();
+                while (itemIt.hasNext()) {
+                    Item currentItem = itemIt.next();
+                    System.out.println(currentItem);
+                    if (currentItem.getItemId() == item_id) {
+                        customers.addItemToMonthlyTab(cust_id, currentItem);
+                    }
+                }
+
+            }
+            // Delete a registered customer
+            case 5: {
+
+            }
+            default:
+                break;
+        }
 
     }
 
