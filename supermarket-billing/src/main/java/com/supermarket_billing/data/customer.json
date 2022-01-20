@@ -1,20 +1,4 @@
 {
   "total_customers": 0,
-  "customers": [
-    {
-      "customer_id": 1,
-      "name": "saharsh",
-      "phoneNo": 23123232,
-      "total": 12.0,
-      "monthlyTab": [
-        {
-          "name": "apple",
-          "price": 12.0,
-          "category": "PRODUCE",
-          "itemId": 1
-        }
-      ],
-      "dataLocation": "supermarket-billing/src/main/java/com/supermarket_billing/data/customer.json"
-    }
-  ]
+  "customers": []
 }

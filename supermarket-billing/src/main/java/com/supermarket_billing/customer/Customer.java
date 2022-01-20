@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -67,6 +68,39 @@ public class Customer {
     public void addItem(Item newItem) {
         this.total += newItem.getPrice();
         this.monthlyTab.add(newItem);
+    }
+
+    public void checkout() {
+        Iterator<Item> itemIt = this.monthlyTab.iterator();
+        float total = 0;
+        System.out.println("");
+        System.out.println(
+                "---------------------------------------------------------------------------------------------");
+        System.out.printf("%5s %10s %10s %8s %20s %17s", "ITEM", "PRICE", "CATEGORY", "DISCOUNT", "TAX",
+                "AMOUNT TO PAY");
+        System.out.println();
+        System.out.println(
+                "---------------------------------------------------------------------------------------------");
+        // iterates over the list
+        while (itemIt.hasNext()) {
+            Item currentItem = itemIt.next();
+            float mrp = currentItem.getPrice();
+            // tax amount is tax% of mrp
+            float taxAmount = currentItem.getTax() / 100 * currentItem.getPrice();
+            float discountedAmount = currentItem.getDiscount() / 100 * currentItem.getPrice();
+            float amountToPay = (mrp + taxAmount) - discountedAmount;
+            total += amountToPay;
+            System.out.format("%7s %14s %7s %10s %25s %13s", currentItem.getName(), currentItem.getPrice(),
+                    currentItem.getCategory(),
+                    currentItem.getDiscount(), currentItem.getTax(), amountToPay);
+            System.out.println();
+        }
+        System.out.println(
+                "----------------------------------------------------------------------------------------------");
+        System.out.printf("%5s %10s %10s %8s %20s %17s", "TOTAL", "     ", "        ", "        ", "   ",
+                total);
+        System.out.println(
+                "----------------------------------------------------------------------------------------------");
     }
 
     public void updateCustomerData() {

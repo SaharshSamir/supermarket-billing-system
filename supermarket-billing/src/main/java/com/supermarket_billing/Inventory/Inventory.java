@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Arrays;
 import java.util.HashMap;
-
+import java.util.Iterator;
 // import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -56,6 +56,15 @@ public class Inventory {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void showAllItems() {
+        Iterator<Item> itemIt = items.iterator();
+        while (itemIt.hasNext()) {
+            Item thisItem = itemIt.next();
+            System.out.println("\n" + thisItem.getItemId() + ". " + thisItem.getName());
+            System.out.println("\n");
         }
     }
 

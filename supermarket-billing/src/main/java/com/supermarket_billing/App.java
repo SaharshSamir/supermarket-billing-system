@@ -8,11 +8,12 @@ import java.util.ListIterator;
 
 import com.supermarket_billing.Inventory.Inventory;
 import com.supermarket_billing.Item.Item;
+import com.supermarket_billing.cart.Cart;
 import com.supermarket_billing.customer.Customer;
 import com.supermarket_billing.customer.Customers;
 // import com.supermarket_billing.Item.Item.Categories;
 
-import com.supermarket_billing.utils.JavaUtils;
+// import com.supermarket_billing.utils.JavaUtils;
 
 /**
  * Hello world!
@@ -21,15 +22,48 @@ public final class App {
     // global vars
     static Scanner sc = new Scanner(System.in);
     static Inventory inventory = new Inventory();
-    static JavaUtils utils = new JavaUtils();
     static Item item = new Item();
     static Customers customers = new Customers();
+    static Cart cart = new Cart();
 
     public static void firstMenu() {
         System.out.println("1. Item functions");
         System.out.println("2. Customer functions");
         System.out.println("3. Cart functions");
         System.out.println("pick one option: ");
+    }
+
+    public static void checkout(ArrayList<Item> items) {
+        Iterator<Item> itemIt = items.iterator();
+        float total = 0;
+        System.out.println("");
+        System.out.println(
+                "---------------------------------------------------------------------------------------------");
+        System.out.printf("%5s %10s %10s %8s %20s %17s", "ITEM", "PRICE", "CATEGORY", "DISCOUNT", "TAX",
+                "AMOUNT TO PAY");
+        System.out.println();
+        System.out.println(
+                "---------------------------------------------------------------------------------------------");
+        // iterates over the list
+        while (itemIt.hasNext()) {
+            Item currentItem = itemIt.next();
+            float mrp = currentItem.getPrice();
+            // tax amount is tax% of mrp
+            float taxAmount = currentItem.getTax() / 100 * currentItem.getPrice();
+            float discountedAmount = currentItem.getDiscount() / 100 * currentItem.getPrice();
+            float amountToPay = (mrp + taxAmount) - discountedAmount;
+            total += amountToPay;
+            System.out.format("%7s %14s %7s %10s %25s %13s", currentItem.getName(), currentItem.getPrice(),
+                    currentItem.getCategory(),
+                    currentItem.getDiscount(), currentItem.getTax(), amountToPay);
+            System.out.println();
+        }
+        System.out.println(
+                "----------------------------------------------------------------------------------------------");
+        System.out.printf("%5s %10s %10s %8s %20s %17s", "TOTAL", "     ", "        ", "        ", "   ",
+                total);
+        System.out.println(
+                "----------------------------------------------------------------------------------------------");
     }
 
     public static void handleInventoryFunctions() {
@@ -81,11 +115,12 @@ public final class App {
 
                     if (currentItem.getItemId() == item_id) {
                         System.out.println("\n");
-                        System.out.println("Item id: " + currentItem.getItemId() + "\n");
-                        System.out.println("Name: " + currentItem.getName() + "\n");
-                        System.out.println("Price: " + currentItem.getPrice() + "\n");
-                        System.out.println("Category: " + currentItem.getCategory() + "\n");
-                        System.out.println("\n");
+                        System.out.println(currentItem);
+                        // System.out.println("Item id: " + currentItem.getItemId() + "\n");
+                        // System.out.println("Name: " + currentItem.getName() + "\n");
+                        // System.out.println("Price: " + currentItem.getPrice() + "\n");
+                        // System.out.println("Category: " + currentItem.getCategory() + "\n");
+                        // System.out.println("\n");
                     }
                 }
                 break;
@@ -98,6 +133,14 @@ public final class App {
                 // get Item price
                 System.out.println("Enter item price: ");
                 float newItemPrice = sc.nextFloat();
+
+                // get item discount
+                System.out.println("Enter item discount: ");
+                float newItemDiscount = sc.nextFloat();
+
+                // get item tax
+                System.out.println("Enter item tax: ");
+                float newItemTax = sc.nextFloat();
 
                 // get Item category
                 System.out.println("Pick a category for the item: ");
@@ -115,7 +158,8 @@ public final class App {
 
                 // building item object
                 int itemId = inventory.getItems().size();
-                Item newItem = new Item(newItemName, newItemCategory, newItemPrice, itemId + 1);
+                Item newItem = new Item(newItemName, newItemCategory, newItemPrice, itemId + 1, newItemDiscount,
+                        newItemTax);
                 inventory.addItem(newItem);
                 System.out.println("New item was added: ");
                 System.out.println(newItem);
@@ -127,7 +171,8 @@ public final class App {
                 items = inventory.getItems();
 
                 while (itemIt.hasNext()) {
-                    System.out.println(itemIt.next().getName());
+                    Item currentItem = itemIt.next();
+                    System.out.println(currentItem.getItemId() + " " + currentItem.getName());
                     System.out.println("\n");
                 }
                 System.out.println("Enter the id of the item you want to edit: ");
@@ -142,7 +187,7 @@ public final class App {
                     }
                 }
                 System.out.println("What field do you want to edit?[1-3] \n");
-                System.out.println("1.Name \n2.price \n3.category");
+                System.out.println("1.Name \n2.Price \n3.Category \n4.Discount \n5.Tax");
                 int opt = sc.nextInt();
                 switch (opt) {
                     // edit Item Name
@@ -174,6 +219,21 @@ public final class App {
                         catAns = sc.nextInt();
                         String newCategory = categories.get(catAns - 1);
                         itemToEdit.setCategory(newCategory);
+                        inventory.updateData();
+                        break;
+                    }
+                    case 4: {
+
+                        System.out.println("Enter the new item Discount: ");
+                        float newDiscount = sc.nextFloat();
+                        itemToEdit.setDiscount(newDiscount);
+                        inventory.updateData();
+                        break;
+                    }
+                    case 5: {
+                        System.out.println("Enter the item tax :");
+                        float newTax = sc.nextFloat();
+                        itemToEdit.setTax(newTax);
                         inventory.updateData();
                         break;
                     }
@@ -254,6 +314,7 @@ public final class App {
         System.out.println("3.Add a registered customer");
         System.out.println("4.Add to Monthly Tab");
         System.out.println("5.Delete a registed customer");
+        System.out.println("6.Prepare bill");
         System.out.println("Enter your choice[1-5]: ");
         int ans = sc.nextInt();
 
@@ -336,12 +397,83 @@ public final class App {
             }
             // Delete a registered customer
             case 5: {
+                System.out.println("Enter the id of the customer: ");
+                int cust_id = sc.nextInt();
 
+                customers.deleteCustomer(cust_id);
+                break;
+            }
+            // Prepare the bill
+            case 6: {
+                System.out.println("Enter the id of the customer: ");
+                int cust_id = sc.nextInt();
             }
             default:
                 break;
         }
 
+    }
+
+    public static void handleCartFunctions() {
+        ArrayList<Item> items = inventory.getItems();
+        System.out.println("1. Show all items in a cart");
+        System.out.println("2. Add items to cart");
+        System.out.println("3. Remove an item from cart");
+        System.out.println("4. Clear cart");
+        System.out.println("5. Checkout ");
+
+        System.out.println("Enter your choice: ");
+        int ans = sc.nextInt();
+
+        switch (ans) {
+            // Show all items in a cart
+            case 1: {
+                cart.showAllItems();
+                break;
+            }
+            // Add items to cart
+            case 2: {
+                inventory.showAllItems();
+                System.out.println("Enter the id of the item you want to add to the cart: ");
+                int itemId = sc.nextInt();
+                Iterator<Item> itemIt = items.iterator();
+                while (itemIt.hasNext()) {
+                    Item currentItem = itemIt.next();
+                    if (currentItem.getItemId() == itemId) {
+                        cart.addItemToCart(currentItem);
+                        break;
+                    }
+                }
+                break;
+            }
+            // Remove an item from cart
+            case 3: {
+                System.out.println("Enter the id of the item you want to remove: ");
+                int itemId = sc.nextInt();
+                Iterator<Item> itemIt = items.iterator();
+                while (itemIt.hasNext()) {
+                    Item currentItem = itemIt.next();
+
+                    if (currentItem.getItemId() == itemId) {
+                        cart.deleteItem(item);
+                        break;
+                    }
+                }
+                break;
+            }
+            // Clear cart
+            case 4: {
+                cart.clearCart();
+                break;
+            }
+            // checkout
+            case 5: {
+                checkout(items);
+                break;
+            }
+            default:
+                break;
+        }
     }
 
     /**
@@ -364,6 +496,10 @@ public final class App {
                 }
                 case 2: {
                     handleCustomerFunctions();
+                    break;
+                }
+                case 3: {
+                    handleCartFunctions();
                 }
 
                 default:

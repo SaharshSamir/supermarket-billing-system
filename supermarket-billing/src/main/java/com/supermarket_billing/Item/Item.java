@@ -6,6 +6,8 @@ public class Item {
     private float price;
     private String category;
     private int itemId;
+    private float discount = 0;
+    private float tax = 0;
 
     // PUBLIC
     // public enum Categories {
@@ -27,6 +29,10 @@ public class Item {
         return this.name;
     }
 
+    public float getDiscount() {
+        return this.discount;
+    }
+
     public int getItemId() {
         return this.itemId;
     }
@@ -39,9 +45,17 @@ public class Item {
         return this.price;
     }
 
+    public float getTax() {
+        return this.tax;
+    }
+
     // setters
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDiscount(float disc) {
+        this.discount = disc;
     }
 
     public void setItemId(int itemId) {
@@ -56,6 +70,10 @@ public class Item {
         this.price = price;
     }
 
+    public void setTax(float tax) {
+        this.tax = tax;
+    }
+
     public Item() {
         this.name = "";
         this.category = "OTHER";
@@ -63,17 +81,19 @@ public class Item {
         this.itemId = 0;
     }
 
-    public Item(String name, String category, float price, int itemId) {
+    public Item(String name, String category, float price, int itemId, float discount, float tax) {
         this.name = name;
         this.category = category;
         this.price = price;
         this.itemId = itemId;
+        this.discount = discount;
+        this.tax = tax;
     }
 
     @Override
     public String toString() {
         String output = "Name: " + this.name + "\n" + "Price: " + this.price + "\n "
-                + "Category: " + this.category;
+                + "Category: " + this.category + "\nDiscount: " + this.discount;
         return output;
     }
 }

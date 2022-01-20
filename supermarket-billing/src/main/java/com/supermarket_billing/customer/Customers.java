@@ -65,6 +65,17 @@ public class Customers {
         updateData();
     }
 
+    public void prepareBill(int cust_id) {
+        Iterator<Customer> customerIt = this.customers.iterator();
+        while (customerIt.hasNext()) {
+            Customer currentCustomer = customerIt.next();
+            if (currentCustomer.getCustomerId() == cust_id) {
+                currentCustomer.checkout();
+                break;
+            }
+        }
+    }
+
     // constructor
     public Customers() {
         HashMap<String, Object> CustomerBase = new HashMap<String, Object>();
